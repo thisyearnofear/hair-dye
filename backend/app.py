@@ -201,15 +201,6 @@ def root():
         'message': 'BrunetteHQ API is running'
     })
 
-# Health check route
-@app.route('/health', methods=['GET'])
-def health_check():
-    return jsonify({
-        'status': 'healthy',
-        'timestamp': datetime.datetime.now().isoformat(),
-        'environment': os.getenv('FLASK_ENV', 'production')
-    })
-
 if __name__ == '__main__':
     print("Starting Flask server on http://localhost:5000")
     app.run(debug=True, port=5000)
