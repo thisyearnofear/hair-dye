@@ -7,6 +7,8 @@ import axios from "axios";
 import { QRCodeSVG } from "qrcode.react";
 import FarcasterAuth from "./components/FarcasterAuth";
 import CastPreview from "./components/CastPreview";
+import StatusIndicator from "./components/StatusIndicator";
+import { API_URL } from "./api/config";
 
 // ABI for basic ERC20 balanceOf function
 const tokenAbi = [
@@ -105,9 +107,12 @@ function App() {
     formData.append("image", selectedImage);
 
     try {
-      const response = await fetch("/dye", {
+      const response = await fetch(`${API_URL}/dye`, {
         method: "POST",
         body: formData,
+        headers: {
+          Accept: "application/json",
+        },
       });
 
       if (!response.ok) {
@@ -183,6 +188,7 @@ function App() {
 
   return (
     <div className="App">
+      <StatusIndicator />
       <h1 className="sweet-title">
         <span data-text="BRUNETTEHQ">
           {"BRUNETTEHQ".split("").map((letter, index) => (

@@ -9,9 +9,21 @@ import requests
 import time
 from flask_cors import CORS
 import json
+import datetime
+import atexit
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={
+    r"/*": {
+        "origins": [
+            "http://localhost:3000",
+            "https://*.vercel.app",
+            "https://brunettehq.com"
+        ],
+        "methods": ["GET", "POST", "OPTIONS"],
+        "allow_headers": ["Content-Type", "Accept"]
+    }
+})
 
 # API Configuration
 NEYNAR_API_KEY = os.getenv('NEYNAR_API_KEY')
@@ -19,6 +31,12 @@ NEYNAR_API_URL = "https://api.neynar.com/v2"
 
 # Debug mode
 app.debug = True
+
+def cleanup():
+    # Add any cleanup code here
+    print("Cleaning up resources...")
+
+atexit.register(cleanup)
 
 @app.route('/test-env', methods=['GET'])
 def test_env():
@@ -158,6 +176,14 @@ def check_signer_status(signer_uuid):
         return jsonify(response.json())
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+@app.route('/health', methods=['GET'])
+def health_check():
+    return jsonify({
+        'status': 'healthy',
+        'timestamp': datetime.datetime.now().isoformat(),
+        'environment': os.getenv('FLASK_ENV', 'production')
+    }), 200
 
 # Add CORS headers to all responses
 @app.after_request

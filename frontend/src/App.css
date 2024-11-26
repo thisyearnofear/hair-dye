@@ -824,7 +824,7 @@ html {
   color: #fde9ff;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   backdrop-filter: blur(5px);
   animation: slideIn 0.3s ease-out;
 }

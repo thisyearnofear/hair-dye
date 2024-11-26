@@ -9,4 +9,3 @@ Pillow==10.0.0
 scikit-image==0.19.3
 opencv-python==4.5.5.62
 gunicorn==21.2.0
-python-dotenv==1.0.0

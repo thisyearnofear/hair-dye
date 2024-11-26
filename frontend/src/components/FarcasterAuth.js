@@ -1,8 +1,9 @@
 import { useEffect } from "react";
+import { NEYNAR_CLIENT_ID } from "../api/config";
 
 const FarcasterAuth = ({ onSuccess }) => {
   useEffect(() => {
-    if (!process.env.REACT_APP_NEYNAR_CLIENT_ID) {
+    if (!NEYNAR_CLIENT_ID) {
       console.error("Missing Neynar Client ID!");
       return;
     }
@@ -28,7 +29,7 @@ const FarcasterAuth = ({ onSuccess }) => {
     <div className="farcaster-auth-container">
       <div
         className="neynar_signin"
-        data-client_id={process.env.REACT_APP_NEYNAR_CLIENT_ID}
+        data-client_id={NEYNAR_CLIENT_ID}
         data-success-callback="onSignInSuccess"
         data-theme="dark"
       />
