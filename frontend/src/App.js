@@ -98,6 +98,7 @@ function App() {
       setDyedImage(null); // Reset dyed image when new image is selected
     }
   };
+
   const handleDyeClick = async () => {
     if (!isConnected) {
       alert("Please connect your wallet first!");
@@ -114,32 +115,29 @@ function App() {
       return;
     }
 
-    setIsProcessing(true);
-    setProcessError(null);
-    const formData = new FormData();
-    formData.append("color", "#000000");
-    formData.append("image", selectedImage);
-
     try {
-      const response = await fetch(`${API_URL}/dye`, {
-        method: "POST",
-        body: formData,
+      setIsProcessing(true);
+      const formData = new FormData();
+      formData.append("image", selectedImage);
+      formData.append("color", "#4D2C1B"); // Brunette color
+
+      // Use Axios for request
+      const response = await axios.post(`${API_URL}/dye`, formData, {
         headers: {
-          Accept: "application/json",
+          "Content-Type": "multipart/form-data",
         },
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to process image");
+      // Check for the URL in the response
+      if (response.data.url) {
+        setDyedImage(response.data.url); // Update state with the Cloudinary image URL
+        setShowCastPreview(true); // Show the preview if needed
+      } else {
+        throw new Error("No image URL in response");
       }
-
-      const blob = await response.blob();
-      const imageUrl = URL.createObjectURL(blob);
-      setDyedImage(imageUrl);
     } catch (error) {
-      setProcessError(error.message);
-      console.error("Error:", error);
+      console.error("Error processing image:", error);
+      setProcessError("Failed to process image. Please try again.");
     } finally {
       setIsProcessing(false);
     }

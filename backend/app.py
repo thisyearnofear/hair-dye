@@ -65,17 +65,34 @@ def dye_hair():
         # Convert the result image back to PIL Image
         result_pil_image = Image.fromarray(result_image)
 
-        # Create a BytesIO object to temporarily store the result image
+        # Save to BytesIO
         result_image_stream = BytesIO()
         result_pil_image.save(result_image_stream, format='JPEG')
         result_image_stream.seek(0)
 
-        return send_file(result_image_stream, mimetype='image/jpeg')
+        # Upload to file.io with 1-hour expiry
+        files = {'file': ('dyed_hair.jpg', result_image_stream, 'image/jpeg')}
+        response = requests.post(
+            'https://file.io/?expires=1h',
+            files=files
+        )
+        
+        if response.status_code != 200:
+            raise Exception("Failed to upload image")
+
+        data = response.json()
+        if not data.get('success'):
+            raise Exception("File upload failed")
+
+        # Return the URL
+        return jsonify({
+            'url': data['link'],
+            'success': True
+        })
     
-    except ValueError as e:
-        return jsonify({'error': str(e)}), 400
     except Exception as e:
-        return jsonify({'error': 'An unexpected error occurred. Please try again.'}), 500
+        print(f"Upload error: {str(e)}")
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/api/farcaster/publish', methods=['POST'])
 def publish_cast():
