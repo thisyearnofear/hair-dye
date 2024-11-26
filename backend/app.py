@@ -17,12 +17,12 @@ CORS(app, resources={
     r"/*": {
         "origins": [
             "http://localhost:3000",
-            "https://*.vercel.app",
-            "https://brunette-backend.onrender.com",
+            "https://brunettehq.vercel.app",
             "https://brunettehq.com"
         ],
         "methods": ["GET", "POST", "OPTIONS"],
-        "allow_headers": ["Content-Type", "Accept"]
+        "allow_headers": ["Content-Type", "Accept", "Authorization"],
+        "expose_headers": ["Content-Type", "Authorization"]
     }
 })
 

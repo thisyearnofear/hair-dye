@@ -1,22 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import { checkHealth } from '../api/health';
+import { API_URL } from '../api/config';
 
 const StatusIndicator = () => {
-  const [isError, setIsError] = useState(false);
+  const [isConnected, setIsConnected] = useState(true);
 
   useEffect(() => {
-    const checkStatus = async () => {
-      const isHealthy = await checkHealth();
-      setIsError(!isHealthy);
+    const checkBackendStatus = async () => {
+      try {
+        const response = await fetch(`${API_URL}/health`);
+        const data = await response.json();
+        console.log('Backend status:', data);
+        setIsConnected(data.status === 'healthy');
+      } catch (error) {
+        console.error('Backend connection failed:', error);
+        setIsConnected(false);
+      }
     };
 
-    checkStatus();
-    // Check every 30 seconds
-    const interval = setInterval(checkStatus, 30000);
+    checkBackendStatus();
+    const interval = setInterval(checkBackendStatus, 30000); // Check every 30 seconds
     return () => clearInterval(interval);
   }, []);
 
-  if (!isError) return null; // Don't show anything when everything is working
+  if (isConnected) return null; // Don't show anything when everything is working
 
   return (
     <div className="error-banner">
