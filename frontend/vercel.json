@@ -2,7 +2,12 @@
     "rewrites": [
         {
             "source": "/api/:path*",
-            "destination": "https://your-backend-url.com/api/:path*"
+            "destination": "https://brunette-backend.onrender.com/:path*"
         }
-    ]
+    ],
+    "build": {
+        "env": {
+            "NPM_FLAGS": "--legacy-peer-deps"
+        }
+    }
 }

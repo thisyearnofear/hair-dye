@@ -15,12 +15,16 @@
     "react-scripts": "^5.0.1",
     "viem": "^1.19.9",
     "wagmi": "^1.4.7",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "typescript": "^4.9.5"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
+  },
+  "resolutions": {
+    "typescript": "^4.9.5"
   }
 }
