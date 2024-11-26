@@ -3,7 +3,7 @@ services:
     name: brunettehq-backend
     env: python
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn wsgi:app
+    startCommand: gunicorn wsgi:app --config gunicorn_config.py --bind 0.0.0.0:10000
     envVars:
       - key: PYTHON_VERSION
         value: 3.9.0

@@ -1,25 +1,25 @@
 import multiprocessing
 
 # Server socket
-bind = "127.0.0.1:8001"
+bind = "0.0.0.0:10000"
 
 # Worker processes
-workers = 1  # Single worker for ML tasks
-threads = 1  # Reduce thread count
-worker_class = "sync"  # Change from 'gthread' to 'sync'
+workers = 1
+threads = 1
+worker_class = "sync"
 
 # Timeout
-timeout = 300  # Increase timeout to 5 minutes
-graceful_timeout = 300  # Matching graceful timeout
+timeout = 300
+graceful_timeout = 300
 
 # Logging
 accesslog = "-"
 errorlog = "-"
-loglevel = "debug"  # Increase logging detail for debugging
+loglevel = "debug"
 
 # Limit worker memory usage
-max_requests = 1000  # Changed from 1
-max_requests_jitter = 100  # Added jitter
+max_requests = 1000
+max_requests_jitter = 100
 
 # Preload application for better performance
-preload_app = True 
+preload_app = True
