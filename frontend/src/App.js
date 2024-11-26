@@ -77,11 +77,25 @@ function App() {
     }
   }, [signerData]);
 
-  const handleImageChange = (event) => {
+  const handleImageChange = async (event) => {
     const file = event.target.files[0];
-    if (file != null) {
+    if (file) {
+      // Validate file size (5MB limit)
+      if (file.size > 5 * 1024 * 1024) {
+        setImageError("File size must be less than 5MB");
+        return;
+      }
+
+      // Validate file type
+      if (!file.type.startsWith("image/")) {
+        setImageError("Please upload an image file");
+        return;
+      }
+
+      setImageError(null);
       setSelectedImage(file);
       setPreviewImage(URL.createObjectURL(file));
+      setDyedImage(null); // Reset dyed image when new image is selected
     }
   };
   const handleDyeClick = async () => {
@@ -151,39 +165,25 @@ function App() {
     setShowCastPreview(true);
   };
 
-  const handleConfirmCast = async (castText) => {
+  const handleConfirmCast = async (text) => {
+    setCastStatus("casting");
     try {
-      setCastStatus("casting");
-      const response = await axios.post("/api/cast", {
-        signer_uuid: farcasterUser.signer_uuid,
-        text: castText,
+      const response = await axios.post(`${API_URL}/api/cast`, {
+        signer_uuid: signerData.signer_uuid,
+        text: text,
         image_url: dyedImage,
       });
-      setCastStatus("success");
-      setShowCastPreview(false);
+
+      if (response.data) {
+        setCastStatus("success");
+        setShowCastPreview(false);
+      } else {
+        throw new Error("Failed to cast");
+      }
     } catch (error) {
       console.error("Error casting:", error);
       setCastStatus("error");
     }
-  };
-
-  const handleImageUpload = (event) => {
-    setImageError(null);
-    const file = event.target.files[0];
-
-    // Validate file type
-    if (!file.type.startsWith("image/")) {
-      setImageError("Please upload an image file.");
-      return;
-    }
-
-    // Validate file size (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      setImageError("Image size should be less than 5MB.");
-      return;
-    }
-
-    // Continue with upload...
   };
 
   return (
