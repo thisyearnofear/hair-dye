@@ -18,6 +18,7 @@ CORS(app, resources={
         "origins": [
             "http://localhost:3000",
             "https://*.vercel.app",
+            "https://brunette-backend.onrender.com",
             "https://brunettehq.com"
         ],
         "methods": ["GET", "POST", "OPTIONS"],
@@ -191,6 +192,23 @@ def after_request(response):
     response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
     response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
     return response
+
+# Root route
+@app.route('/', methods=['GET', 'HEAD'])
+def root():
+    return jsonify({
+        'status': 'online',
+        'message': 'BrunetteHQ API is running'
+    })
+
+# Health check route
+@app.route('/health', methods=['GET'])
+def health_check():
+    return jsonify({
+        'status': 'healthy',
+        'timestamp': datetime.datetime.now().isoformat(),
+        'environment': os.getenv('FLASK_ENV', 'production')
+    })
 
 if __name__ == '__main__':
     print("Starting Flask server on http://localhost:5000")
